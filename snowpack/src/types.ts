@@ -55,6 +55,7 @@ export interface LoadUrlOptions {
   allowStale?: boolean;
   encoding?: undefined | BufferEncoding | null;
   importMap?: ImportMap;
+  originalUrl?: string | null;
 }
 
 export interface SnowpackDevServer {
