@@ -56,6 +56,7 @@ export class FileBuilder {
   readonly urls: string[];
   readonly config: SnowpackConfig;
   hmrEngine: EsmHmrEngine | null = null;
+  originalUrl: string | null = null;
 
   constructor({
     loc,
@@ -64,6 +65,7 @@ export class FileBuilder {
     isSSR,
     config,
     hmrEngine,
+    originalUrl
   }: {
     loc: string;
     isDev: boolean;
@@ -71,6 +73,7 @@ export class FileBuilder {
     isSSR: boolean;
     config: SnowpackConfig;
     hmrEngine?: EsmHmrEngine | null;
+    originalUrl?: string | null;
   }) {
     this.loc = loc;
     this.isDev = isDev;
@@ -78,6 +81,7 @@ export class FileBuilder {
     this.isSSR = isSSR;
     this.config = config;
     this.hmrEngine = hmrEngine || null;
+    this.originalUrl = originalUrl || null;
     const urls = getUrlsForFile(loc, config);
     if (!urls) {
       throw new Error(`No mounted URLs configured for file: ${loc}`);
@@ -275,6 +279,7 @@ export class FileBuilder {
         isSSR: this.isSSR,
         isPackage: false,
         isHmrEnabled: this.isHMR,
+        originalUrl: this.originalUrl,
       });
       return builtFileOutput;
     })();

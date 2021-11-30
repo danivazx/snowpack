@@ -448,6 +448,7 @@ export async function startServer(
       isResolve: _isResolve,
       encoding: _encoding,
       importMap,
+      originalUrl,
     }: LoadUrlOptions = {},
   ): Promise<LoadResult | undefined> {
     const isSSR = _isSSR ?? false;
@@ -698,6 +699,7 @@ export async function startServer(
         isHMR,
         config,
         hmrEngine,
+        originalUrl,
       });
       // note: for Tailwind, CSS needs to avoid caching in dev server (Tailwind needs to handle rebuilding, not Snowpack)
       const isTailwind =
@@ -808,6 +810,7 @@ export async function startServer(
     {handleError}: {handleError?: boolean} = {},
   ) {
     let reqUrl = req.url!;
+    let originalUrl = reqUrl;
     const matchedRouteHandler = matchRouteHandler(reqUrl, 'dest');
     // If a route is matched, rewrite the URL or call the route function
     if (matchedRouteHandler) {
@@ -849,7 +852,7 @@ export async function startServer(
 
     // Otherwise, load the file and respond if successful.
     try {
-      const result = await loadUrl(reqUrl, {allowStale: true, encoding: null});
+      const result = await loadUrl(reqUrl, {allowStale: true, encoding: null, originalUrl});
       if (!result) {
         throw new NotFoundError(reqUrl);
       }
