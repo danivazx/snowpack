@@ -13,6 +13,7 @@ export interface BuildFileOptions {
   isPackage: boolean;
   isHmrEnabled: boolean;
   config: SnowpackConfig;
+  originalUrl?: string|null;
 }
 
 /**
@@ -155,7 +156,7 @@ async function composeSourceMaps(
 async function runPipelineTransformStep(
   output: SnowpackBuildMap,
   srcPath: string,
-  {isDev, isHmrEnabled, isPackage, isSSR, config}: BuildFileOptions,
+  {isDev, isHmrEnabled, isPackage, isSSR, config, originalUrl}: BuildFileOptions,
 ): Promise<SnowpackBuildMap> {
   const rootFilePath = removeExtension(srcPath, getExtension(srcPath));
   const rootFileName = path.basename(rootFilePath);
@@ -189,6 +190,7 @@ async function runPipelineTransformStep(
           urlPath: `./${path.basename(rootFileName + destExt)}`,
           isHmrEnabled,
           isSSR,
+          originalUrl,
         });
         logger.debug(`✔ transform() success [${debugPath}]`, {name: step.name});
         if (typeof result === 'string' || Buffer.isBuffer(result)) {
